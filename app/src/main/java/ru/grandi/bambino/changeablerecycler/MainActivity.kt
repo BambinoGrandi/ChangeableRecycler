@@ -16,8 +16,8 @@ class MainActivity : AppCompatActivity() {
     private val mainViewModel by viewModel<MainViewModel>()
 
     private var deleteItemListener = object : DeleteItemListener {
-        override fun onClick(position: Int) {
-            adapter?.deleteItem(position)
+        override fun onClick(changeableItem: ChangeableItem) {
+            adapter?.deleteItem(changeableItem)
         }
     }
 

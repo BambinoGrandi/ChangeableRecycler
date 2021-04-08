@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.*
 import java.lang.Thread.sleep
 
-class MainViewModel : ViewModel() {
+class MainViewModel(private val repository: Repository) : ViewModel() {
 
     private val data = mutableListOf<ChangeableItem>()
     var numberItem = 0
@@ -22,8 +22,10 @@ class MainViewModel : ViewModel() {
         createItemScope.launch {
             while (true){
                 sleep(5000)
+                val lastItem = repository.getAllChangeableItems().last()
+                var number = lastItem.numberItem
                 Log.e("data", "5 sek")
-                val changeableItem = ChangeableItem(numberItem = ++numberItem)
+                val changeableItem = ChangeableItem(numberItem = ++number)
                 addInDeletePull(changeableItem)
             }
         }
@@ -49,6 +51,7 @@ class MainViewModel : ViewModel() {
     }
 
     private fun addItemRandomPosition(changeableItem: ChangeableItem) {
+        data.addAll(repository.getAllChangeableItems())
         if (data.size == 0) {
             data.add(changeableItem)
         } else {

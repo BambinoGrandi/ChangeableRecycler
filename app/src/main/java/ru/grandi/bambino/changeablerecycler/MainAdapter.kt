@@ -19,9 +19,10 @@ class MainAdapter(
         }
     }
 
-    fun deleteItem(position: Int) {
-        PULL_DELETE_ITEM.add(data[position])
-        data.removeAt(position)
+    fun deleteItem(changeableItem: ChangeableItem) {
+        val position = data.indexOf(changeableItem)
+        PULL_DELETE_ITEM.add(changeableItem)
+        data.remove(changeableItem)
         notifyItemRemoved(position)
     }
 
@@ -35,12 +36,14 @@ class MainAdapter(
     override fun onBindViewHolder(holder: MainViewHolder, position: Int) {
         holder.initField()
         holder.bind(data[position])
-        holder.deleteItem(deleteItemListener, position)
+        holder.deleteItem(deleteItemListener, data[position])
     }
 
     override fun getItemCount() = data.size
 
-    class MainViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class MainViewHolder(itemView: View) :
+        RecyclerView.ViewHolder(itemView) {
+
         private lateinit var numberItem: TextView
         private lateinit var deleteButton: Button
 
@@ -53,14 +56,14 @@ class MainAdapter(
             numberItem.text = changeableItem.numberItem.toString()
         }
 
-        fun deleteItem(deleteItemListener: DeleteItemListener, position: Int) {
+        fun deleteItem(deleteItemListener: DeleteItemListener, changeableItem: ChangeableItem) {
             deleteButton.setOnClickListener {
-                deleteItemListener.onClick(position)
+                deleteItemListener.onClick(changeableItem)
             }
         }
     }
 }
 
 interface DeleteItemListener {
-    fun onClick(position: Int)
+    fun onClick(changeableItem: ChangeableItem)
 }
